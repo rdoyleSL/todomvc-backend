@@ -1,27 +1,33 @@
 /*global angular */
 
 /**
- * The main controller for the app. The controller:
- * - retrieves and persists the model via the todoStorage service
- * - exposes the model to the template and provides event handlers
+ * This works with the backend for the most part.
+ * There are a couple of things that still need changing:
+ * - marking as complete
+ * - marking all as complete
+ * - clear completed
  */
 angular.module('todomvc')
-	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoStorage) {
+	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoScala) {
 		'use strict';
 
-		var todos = $scope.todos = todoStorage.get();
+		var todos;
+
+		todoScala.get(function(data) {
+			todos = $scope.todos = data;
+		});
 
 		$scope.newTodo = '';
 		$scope.editedTodo = null;
-
+		
 		$scope.$watch('todos', function (newValue, oldValue) {
-			$scope.remainingCount = $filter('filter')(todos, { completed: false }).length;
-			$scope.completedCount = todos.length - $scope.remainingCount;
-			$scope.allChecked = !$scope.remainingCount;
-			if (newValue !== oldValue) { // This prevents unneeded calls to the local storage
-				todoStorage.put(todos);
+			if (todos) {
+				$scope.remainingCount = $filter('filter')(todos, { completed: false }).length;
+				$scope.completedCount = todos.length - $scope.remainingCount;
+				$scope.allChecked = !$scope.remainingCount;
 			}
 		}, true);
+		
 
 		// Monitor the current route for changes and adjust the filter accordingly.
 		$scope.$on('$routeChangeSuccess', function () {
@@ -38,10 +44,13 @@ angular.module('todomvc')
 				return;
 			}
 
-			todos.push({
+            var todo = {
 				title: newTodo,
-				completed: false
-			});
+				completed: false,
+				order: todos.length
+			};
+			todos.push(todo);
+			todoScala.post(todo);
 
 			$scope.newTodo = '';
 		};
@@ -55,9 +64,11 @@ angular.module('todomvc')
 		$scope.doneEditing = function (todo) {
 			$scope.editedTodo = null;
 			todo.title = todo.title.trim();
+			todoScala.put(todo);
 
 			if (!todo.title) {
 				$scope.removeTodo(todo);
+				todoScala.remove(todo.id);
 			}
 		};
 
@@ -68,6 +79,7 @@ angular.module('todomvc')
 
 		$scope.removeTodo = function (todo) {
 			todos.splice(todos.indexOf(todo), 1);
+			todoScala.remove(todo.id);
 		};
 
 		$scope.clearCompletedTodos = function () {

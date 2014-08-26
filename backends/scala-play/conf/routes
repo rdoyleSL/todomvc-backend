@@ -1,0 +1,14 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+OPTIONS /*path                      controllers.Todos.optionsPath(path: String)
+OPTIONS /                           controllers.Todos.options
+GET     /                           controllers.Todos.index
+POST    /                           controllers.Todos.add
+PUT     /:id                        controllers.Todos.update(id: Int)
+DELETE  /:id                        controllers.Todos.delete(id: Int)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
