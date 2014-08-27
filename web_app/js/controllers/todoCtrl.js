@@ -1,24 +1,34 @@
 /*global angular */
 
-/**
- * This works with the backend for the most part.
- * There are a couple of things that still need changing:
- * - marking as complete
- * - marking all as complete
- */
 angular.module('todomvc')
 	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoScala) {
 		'use strict';
 
-		var todos;
+		var Todo = function (title, order, completed, id) {
+			var self = this;
+
+			this.title = title;
+			this.order = order;
+			this.completed = completed;
+			this.id = id;
+
+			this.toggleCompleted = function () {
+				self.completed = !self.completed;
+				$scope.updateTodo(self);
+			};
+		};
+
+		var todos = $scope.todos = [];
 
 		todoScala.get(function(data) {
-			todos = $scope.todos = data;
+			todos = $scope.todos = data.map(function (todo) {
+				return new Todo(todo.title, todo.order, todo.completed, todo.id);
+			});
 		});
 
 		$scope.newTodo = '';
 		$scope.editedTodo = null;
-		
+
 		$scope.$watch('todos', function (newValue, oldValue) {
 			if (todos) {
 				$scope.remainingCount = $filter('filter')(todos, { completed: false }).length;
@@ -26,7 +36,6 @@ angular.module('todomvc')
 				$scope.allChecked = !$scope.remainingCount;
 			}
 		}, true);
-		
 
 		// Monitor the current route for changes and adjust the filter accordingly.
 		$scope.$on('$routeChangeSuccess', function () {
@@ -43,11 +52,7 @@ angular.module('todomvc')
 				return;
 			}
 
-            var todo = {
-				title: newTodo,
-				completed: false,
-				order: todos.length
-			};
+            var todo = new Todo(newTodo, todos.length, false);
 			todos.push(todo);
 			todoScala.post(todo);
 
@@ -78,7 +83,7 @@ angular.module('todomvc')
 
 		$scope.updateTodo = function (todo) {
 			todoScala.put(todo);
-		}
+		};
 
 		$scope.removeTodo = function (todo) {
 			todos.splice(todos.indexOf(todo), 1);
@@ -95,7 +100,7 @@ angular.module('todomvc')
 
 		$scope.markAll = function (completed) {
 			todos.forEach(function (todo) {
-				todo.completed = !completed;
+				todo.toggleCompleted();
 			});
 		};
 	});
