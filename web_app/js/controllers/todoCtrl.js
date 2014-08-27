@@ -5,7 +5,6 @@
  * There are a couple of things that still need changing:
  * - marking as complete
  * - marking all as complete
- * - clear completed
  */
 angular.module('todomvc')
 	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoScala) {
@@ -64,11 +63,11 @@ angular.module('todomvc')
 		$scope.doneEditing = function (todo) {
 			$scope.editedTodo = null;
 			todo.title = todo.title.trim();
-			todoScala.put(todo);
 
-			if (!todo.title) {
+			if (todo.title) {
+				$scope.updateTodo(todo);
+			} else {
 				$scope.removeTodo(todo);
-				todoScala.remove(todo.id);
 			}
 		};
 
@@ -77,14 +76,20 @@ angular.module('todomvc')
 			$scope.doneEditing($scope.originalTodo);
 		};
 
+		$scope.updateTodo = function (todo) {
+			todoScala.put(todo);
+		}
+
 		$scope.removeTodo = function (todo) {
 			todos.splice(todos.indexOf(todo), 1);
 			todoScala.remove(todo.id);
 		};
 
 		$scope.clearCompletedTodos = function () {
-			$scope.todos = todos = todos.filter(function (val) {
-				return !val.completed;
+			todos.forEach(function (todo) {
+				if (todo.completed) {
+					$scope.removeTodo(todo);
+				}
 			});
 		};
 
