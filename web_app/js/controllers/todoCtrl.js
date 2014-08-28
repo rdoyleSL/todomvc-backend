@@ -1,7 +1,7 @@
 /*global angular */
 
 angular.module('todomvc')
-	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoScala) {
+	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoHttp) {
 		'use strict';
 
 		var Todo = function (title, order, completed, id) {
@@ -20,7 +20,7 @@ angular.module('todomvc')
 
 		var todos = $scope.todos = [];
 
-		todoScala.get(function(data) {
+		todoHttp.get(function(data) {
 			todos = $scope.todos = data.map(function (todo) {
 				return new Todo(todo.title, todo.order, todo.completed, todo.id);
 			});
@@ -54,7 +54,7 @@ angular.module('todomvc')
 
             var todo = new Todo(newTodo, todos.length, false);
 			todos.push(todo);
-			todoScala.post(todo);
+			todoHttp.post(todo);
 
 			$scope.newTodo = '';
 		};
@@ -82,12 +82,12 @@ angular.module('todomvc')
 		};
 
 		$scope.updateTodo = function (todo) {
-			todoScala.put(todo);
+			todoHttp.put(todo);
 		};
 
 		$scope.removeTodo = function (todo) {
 			todos.splice(todos.indexOf(todo), 1);
-			todoScala.remove(todo.id);
+			todoHttp.remove(todo.id);			
 		};
 
 		$scope.clearCompletedTodos = function () {
