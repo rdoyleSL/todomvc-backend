@@ -1,5 +1,10 @@
 Various backend implementations of the Todo-MVC app.
 
+# Running TodoMVC-backend locally
+
+The default method to host the front-end code is through Node.
+This can be done via the command line by navigating to the web_app folder and running *'node server.js'*.
+
 # Developing TodoMVC-backend
 
 ## Adding Backends

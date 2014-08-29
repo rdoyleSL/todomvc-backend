@@ -3,8 +3,8 @@
 angular.module('todomvc').factory('todoHttp', function ($http) {
 	'use strict';
 
-    // The port should be 9001 for ASP.NET or 9000 for Scala
-	var api = 'http://localhost:9000/todos/';
+    // The port should be 9001 for ASP.NET or 9002 for Scala
+	var api = 'http://localhost:9001/todos/';
 
 	return {
 		get: function (callback) {
