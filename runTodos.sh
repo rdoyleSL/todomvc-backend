@@ -1,4 +1,5 @@
 #!/bin/sh
 clear
-echo "Launching Scala-Play"
-./backends/scala-play/activator
+echo "Launching Todo MVC website..."
+cd web_app
+node server.js
