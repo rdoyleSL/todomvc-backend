@@ -1,27 +1,28 @@
 /*global angular*/
 
-angular.module('todomvc').factory('todoHttp', function ($http) {
+angular.module('todomvc').factory('todoHttp', function ($http, todoBackend) {
 	'use strict';
 
-    // The port should be 9001 for ASP.NET or 9002 for Scala
-	var api = 'http://localhost:9001/todos/';
+	var constructAddress = function () {
+		return 'http://localhost:' + todoBackend.getCurrentBackend().port + '/todos/';
+	};
 
 	return {
 		get: function (callback) {
-			$http.get(api).success(function(data) {
+			$http.get(constructAddress()).success(function(data) {
 				callback(data);
 			});
 		},
 		post: function (todo) {
-			$http.post(api, todo).success(function(data) {
+			$http.post(constructAddress(), todo).success(function(data) {
 				todo.id = data.id;
 			});
 		},
 		put: function (todo) {
-			$http.put(api + todo.id, todo);
+			$http.put(constructAddress() + todo.id, todo);
 		},
 		remove: function (id) {
-			$http.delete(api + id);
+			$http.delete(constructAddress() + id);
 		}
 	};
 })

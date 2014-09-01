@@ -1,7 +1,7 @@
 /*global angular */
 
 angular.module('todomvc')
-	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoHttp) {
+	.controller('TodoCtrl', function TodoCtrl($scope, $routeParams, $filter, todoHttp, todoBackend) {
 		'use strict';
 
 		var Todo = function (title, order, completed, id) {
@@ -18,13 +18,24 @@ angular.module('todomvc')
 			};
 		};
 
-		var todos = $scope.todos = [];
-
-		todoHttp.get(function(data) {
-			todos = $scope.todos = data.map(function (todo) {
-				return new Todo(todo.title, todo.order, todo.completed, todo.id);
+		var getTodos = function () {
+			todoHttp.get(function(data) {
+				todos = $scope.todos = data.map(function (todo) {
+					return new Todo(todo.title, todo.order, todo.completed, todo.id);
+				});
 			});
-		});
+		};
+
+		var todos = $scope.todos = [];
+		todos = getTodos();
+
+		$scope.backends = todoBackend.getAvailableBackends();
+		$scope.selectedBackend = todoBackend.getCurrentBackend().displayText;
+		$scope.backendChanged = function () {
+			todoBackend.setBackend($scope.selectedBackend);
+			var todos = $scope.todos = [];
+			getTodos();
+		};
 
 		$scope.newTodo = '';
 		$scope.editedTodo = null;

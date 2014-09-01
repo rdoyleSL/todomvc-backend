@@ -10,7 +10,11 @@
 		<ng-view />
 
 		<script type="text/ng-template" id="todomvc-index.html">
-			<section id="todoapp">
+		    <label for="backend">Select a backend:</label>
+		    <select name="backend" ng-model="selectedBackend" ng-change="backendChanged()">
+				<option ng-repeat="backend in backends">{{backend.displayText}}</option>
+		    </select>
+			<section id="todoapp">	
 				<header id="header">
 					<h1>todos</h1>
 					<form id="todo-form" ng-submit="addTodo()">
@@ -68,6 +72,7 @@
 		<script src="js/app.js"></script>
 		<script src="js/controllers/todoCtrl.js"></script>
 		<script src="js/services/todoHttpService.js"></script>
+		<script src="js/services/todoBackendService.js"></script>
 		<script src="js/directives/todoFocus.js"></script>
 		<script src="js/directives/todoEscape.js"></script>
 	</body>
