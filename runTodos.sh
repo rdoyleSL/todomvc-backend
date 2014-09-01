@@ -7,6 +7,8 @@ start activator "run -Dhttp.port=9002"
 cd ../..
 
 echo "Launching ASP.NET service..."
+start backends/AspNet/AspNet/bin/Debug/AspNet.exe
 
 echo "Launching Todo MVC website..."
-node web_app/server.js
+cd web_app
+node server.js

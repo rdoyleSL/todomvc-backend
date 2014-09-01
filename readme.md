@@ -2,8 +2,17 @@ Various backend implementations of the Todo-MVC app.
 
 # Running TodoMVC-backend locally
 
+The whole project can be run by running the *'runTodos.sh'* script in the root folder. There are some set-up steps required for each back end documented below.
+
+## Frontend
 The default method to host the front-end code is through Node.
 This can be done via the command line by navigating to the web_app folder and running *'node server.js'*.
+
+## Scala-Play
+To run the scala-play project you need to install the Play framework such that the *'activator'* command is available from the command line.
+
+## Asp.Net
+To run the Asp.Net backend you currently need to run the project in Debug mode in Visual Studio such that there is a valid executable available in the *bin/debug* folder.
 
 # Developing TodoMVC-backend
 
