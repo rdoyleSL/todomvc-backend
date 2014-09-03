@@ -16,7 +16,7 @@ object Todos extends Controller {
   }
 
   def update(id: Long) = TodoAction { todo =>
-  	Ok(toJson(Some(DataStore.update(id, todo)))).withHeaders("Access-Control-Allow-Origin" -> "*")
+    Ok(toJson(Some(DataStore.update(id, todo)))).withHeaders("Access-Control-Allow-Origin" -> "*")
   }
 
   def add = TodoAction { todo =>
@@ -24,10 +24,10 @@ object Todos extends Controller {
   }
 
   def delete(id: Long) = Action {
-  	Ok(toJson(DataStore.delete(id))).withHeaders("Access-Control-Allow-Origin" -> "*")
+    Ok(toJson(DataStore.delete(id))).withHeaders("Access-Control-Allow-Origin" -> "*")
   }
 
-  def options = Action {
+  def options(path: String) = Action {
     Ok("").withHeaders(
       "Access-Control-Allow-Origin" -> "*",
       "Access-Control-Allow-Methods" -> "GET, POST, PUT, DELETE, OPTIONS",
@@ -36,8 +36,6 @@ object Todos extends Controller {
       "Access-Control-Max-Age" -> (60 * 60 * 24).toString
     )
   }
-
-  def optionsPath(path: String) = options
 
   private def TodoAction(operation: Todo => Result) = Action(parse.json) { request =>
     Todo.form.bind(request.body).fold(

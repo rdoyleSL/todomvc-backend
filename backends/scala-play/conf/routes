@@ -3,12 +3,11 @@
 # ~~~~
 
 # Home page
-OPTIONS /todos/*path                      controllers.Todos.optionsPath(path: String)
-OPTIONS /todos/                           controllers.Todos.options
-GET     /todos/                           controllers.Todos.index
-POST    /todos/                           controllers.Todos.add
-PUT     /todos/:id                        controllers.Todos.update(id: Int)
-DELETE  /todos/:id                        controllers.Todos.delete(id: Int)
+OPTIONS /*path         controllers.Todos.options(path: String)
+GET     /todos/        controllers.Todos.index
+POST    /todos/        controllers.Todos.add
+PUT     /todos/:id     controllers.Todos.update(id: Int)
+DELETE  /todos/:id     controllers.Todos.delete(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file  controllers.Assets.at(path="/public", file)
